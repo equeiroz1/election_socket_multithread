@@ -10,8 +10,7 @@ def accept_incoming_connections():
     while True:
         client, client_address = SERVER.accept()
         print("%s:%s está online." % client_address)
-        client.send(bytes("Bem vindo a urna!", "utf8"))
-        client.send(bytes("Por favor, coloque seu nome e a legenda do candidato desejado.", "utf8"))
+        client.send(bytes("Bem vindo a urna!@Coloque seu nome e a legenda do candidato.", "utf8"))
         addresses[client] = client_address
         Thread(target=handle_client, args=(client,)).start()
 

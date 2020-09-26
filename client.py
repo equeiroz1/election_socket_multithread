@@ -12,46 +12,39 @@ def receive():
             msg_split = msg.split("@")
             print(msg_split)
             if len(msg_split) > 1:
-                destino = msg_split[1]
-                print(destino)
-                if destino == my_name.get():
-                    print(msg_split)
-                    msg_list.insert(tkinter.END, "By: " + msg_split[0])
-                    msg_list.insert(tkinter.END, "Assunto: " + msg_split[2])
-                    msg_list.insert(tkinter.END, "Mensagem: " + msg_split[3])
-                    msg_list.insert(tkinter.END, " ")
+               msg_list.insert(tkinter.END, msg_split[0] + '\n')
+               msg_list.insert(tkinter.END, msg_split[1] + '\n')
 
             if len(msg_split) == 1:
-                msg_list.insert(tkinter.END, msg)
+                
+                msg_list.insert(tkinter.END, msg + '\n')
                 print(msg)
 
-        except OSError:  # Possibly client has left the chat.
+        except OSError: 
             break
 
 
-def send_vote(event=None):  # event is passed by binders.
+def send_vote(event=None):  
     """Handles sending of messages."""
     msg = "@" + my_name.get() + "@" + my_vote.get()
     print(msg)
     client_socket.send(bytes(msg, "utf8"))
 
 
-def send(event=None):  # event is passed by binders.
-    """Handles sending of messages."""
-    if my_destinatario.get() != "" and my_msg.get() != "":
-        msg = "@" + my_destinatario.get() + "@" + my_vote.get() + "@" + my_msg.get()
-        my_destinatario.set("")  # Clears input field.
-        my_vote.set("")
-        my_msg.set("")  # Clears input field.
+def send(event=None):  
+    """Handles exit."""
+    if my_msg.get() != "":
+        msg = "@" + my_msg.get()
+
         client_socket.send(bytes(msg, "utf8"))
 
 
-def sair(event=None):  # event is passed by binders.
-    """Encerrar a conexão"""
+def exit(event=None): 
+    """Close connection"""
     msg = "{quit}"
     client_socket.send(bytes(msg, "utf8"))
     client_socket.close()
-    janela.quit()
+    window.quit()
 
 
 
@@ -60,53 +53,45 @@ def on_closing(event=None):
     my_msg.set("{quit}")
     send()
 
-janela = tkinter.Tk()
-janela.title("Client1")
-janela.configure(bg="#DCDCDC")
-janela.geometry("+0+10")
+window = tkinter.Tk()
+window.title("Client")
+window.configure(bg="#DCDCDC")
+window.geometry("+0+10")
 
 
-messages_frame = tkinter.Frame(janela)
+messages_frame = tkinter.Frame(window)
 my_name = tkinter.StringVar()
-my_destinatario = tkinter.StringVar()
 my_vote = tkinter.StringVar()
-my_msg = tkinter.StringVar()  # For the messages to be sent.
+my_msg = tkinter.StringVar()
 
 scrollbar = tkinter.Scrollbar(messages_frame)
 
-l_seu_nome = tkinter.Label(janela, text="   Seu nome:", font="Verdana 16 bold", width=11, height=2, bg="#DCDCDC")
-l_destinatario = tkinter.Label(janela, text=" Destinatário:", font="Verdana 16 bold", width=11, height=2, bg="#DCDCDC")
-l_assunto = tkinter.Label(janela, text="       Assunto:", font="Verdana 16 bold", width=11, height=1, bg="#DCDCDC")
-l_mensagem = tkinter.Label(janela, text="   Mensagem:", font="Verdana 16 bold", width=11, height=2, bg="#DCDCDC")
+l_seu_nome = tkinter.Label(window, text="   Seu nome:", font="Arial 10 bold", width=11, height=2, bg="#DCDCDC")
+l_assunto = tkinter.Label(window, text="       Voto:", font="Arial 10 bold", width=11, height=2, bg="#DCDCDC")
 
-l_caixa_de_entrada = tkinter.Label(janela, text="Caixa de Entrada", font="Verdana 16 bold", height=1, bg="#DCDCDC")
+l_log = tkinter.Label(window, text="Log Urna", font="Arial 10 bold", height=1, bg="#DCDCDC")
 
-l_divisoriac = tkinter.Label(janela, width=1, height=1, bg="#DCDCDC")
-l_divisorian = tkinter.Label(janela, width=1, height=1, bg="#2F4F4F")
-l_divisorias = tkinter.Label(janela, width=1, height=1, bg="#2F4F4F")
-l_divisoriae = tkinter.Label(janela, width=1, height=1, bg="#2F4F4F")
-l_divisoriaw = tkinter.Label(janela, width=1, height=1, bg="#2F4F4F")
+l_divisoriac = tkinter.Label(window, width=1, height=1, bg="#DCDCDC")
+l_divisorian = tkinter.Label(window, width=1, height=1, bg="#2F4F4F")
+l_divisorias = tkinter.Label(window, width=1, height=1, bg="#2F4F4F")
+l_divisoriae = tkinter.Label(window, width=1, height=1, bg="#2F4F4F")
+l_divisoriaw = tkinter.Label(window, width=1, height=1, bg="#2F4F4F")
 
-msg_list = tkinter.Listbox(janela, height=11, width=38, font="Verdana 12 bold", fg="#2F4F4F", border=2,
+msg_list = tkinter.Listbox(window, height=11, width=38, font="Arial 9 bold", fg="#2F4F4F", border=2,
                            yscrollcommand=scrollbar.set)
 
-e_seu_nome = tkinter.Entry(janela, font="Verdana 12 bold", fg="#2F4F4F", textvariable=my_name)
+e_seu_nome = tkinter.Entry(window, font="Arial 10 bold", fg="#2F4F4F", textvariable=my_name)
 e_seu_nome.bind("<Return>", )
-e_destinatario = tkinter.Entry(janela, font="Verdana 12 bold", fg="#2F4F4F", textvariable=my_destinatario)
-e_destinatario.bind("<Return>", )
-e_assunto = tkinter.Entry(janela, font="verdana 12 bold", fg="#2F4F4F", textvariable=my_vote)
-e_assunto.bind("<Return>", )
-e_mensagem = tkinter.Entry(janela, font="Verdana 12 bold", fg="#2F4F4F", textvariable=my_msg)
-e_mensagem.bind("<Return>", )
+e_vote = tkinter.Entry(window, font="Arial 10 bold", fg="#2F4F4F", textvariable=my_vote)
+e_vote.bind("<Return>", )
 
-janela.protocol("WM_DELETE_WINDOW", on_closing)
+window.protocol("WM_DELETE_WINDOW", on_closing)
 
-b_enviar_nome = tkinter.Button(janela, text="    Enviar Nome    ", font="Verdana 14 bold", height=1, border=3,
+b_send_vote = tkinter.Button(window, text="    Votar   ", font="Arial 10 bold", height=1, border=3,
                                relief="groove", fg="#2F4F4F", command=send_vote)
-b_enviar = tkinter.Button(janela, text="Enviar Mensagem", font="Verdana 14 bold", height=1, border=3,
-                          relief="groove", fg="#2F4F4F", command=send)
-b_sair = tkinter.Button(janela, text="Sair", font="Verdana 14 bold", fg="#B22222", border=3, relief='groove',
-                        command=sair)
+
+b_exit = tkinter.Button(window, text="Sair", font="Arial 10 bold", fg="#B22222", border=3, relief='groove',
+                        command=exit)
 
 scrollbar.grid()
 msg_list.grid(row=10, column=1, columnspan=2)
@@ -118,21 +103,15 @@ l_divisoriae.grid(row=0, column=0, rowspan=13, sticky="n"+"s")
 l_divisoriaw.grid(row=0, column=3, rowspan=14, sticky="n"+"s")
 
 l_seu_nome.grid(row=1, column=1, sticky="w")
-l_destinatario.grid(row=3, column=1, sticky="w")
-l_assunto.grid(row=4, column=1, sticky="w")
-l_mensagem.grid(row=5, column=1, sticky="w")
+l_assunto.grid(row=2, column=1, sticky="w")
 l_divisoriac.grid(row=8, column=1)
-l_caixa_de_entrada.grid(row=9, column=1, columnspan=3)
+l_log.grid(row=9, column=1, columnspan=3)
 
 e_seu_nome.grid(row=1, column=2)
-e_destinatario.grid(row=3, column=2)
-e_assunto.grid(row=4, column=2)
-e_mensagem.grid(row=5, column=2)
+e_vote.grid(row=2, column=2)
 
-
-b_enviar.grid(row=6, column=2, sticky="n")
-b_enviar_nome.grid(row=2, column=2, sticky="n")
-b_sair.grid(row=12, column=1, columnspan=3)
+b_send_vote.grid(row=6, column=2, sticky="n")
+b_exit.grid(row=12, column=1, columnspan=3)
 
 
 HOST = "localhost"
@@ -150,5 +129,5 @@ client_socket.connect(ADDR)
 
 receive_thread = Thread(target=receive)
 receive_thread.start()
-# Starts GUI execution.
-janela.mainloop()
+
+window.mainloop()
