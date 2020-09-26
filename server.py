@@ -1,22 +1,24 @@
 #!/usr/bin/env python3
-"""Server for multithreaded (asynchronous) chat application."""
+"""Server for multithreaded (asynchronous) election application."""
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 import numpy as np
 
 
 def accept_incoming_connections():
-    """Sets up handling for incoming clients."""
+    """Sets up handling for incoming clients (voters)."""
     while True:
         client, client_address = SERVER.accept()
         print("%s:%s está online." % client_address)
-        client.send(bytes("Qual o seu nome ?", "utf8"))
+        client.send(bytes("Bem vindo a urna!", "utf8"))
+        client.send(bytes("Por favor, coloque seu nome e a legenda do candidato desejado.", "utf8"))
         addresses[client] = client_address
         Thread(target=handle_client, args=(client,)).start()
 
 
-def handle_client(client):  # Takes client socket as argument.
-    """Handles a single client connection."""
+#takes client socket as argument.
+def handle_client(client): 
+    """Handles client connection"""
 
     msg = client.recv(BUFSIZ).decode("utf8")
     msg_split = msg.split("@")
@@ -24,38 +26,28 @@ def handle_client(client):  # Takes client socket as argument.
     name = msg_split[1]
     vote = msg_split[2]
 
-    welcome = "Bem vindo "
-    client.send(bytes(welcome + name + "!", "utf8"))
-    client.send(bytes("Agora vocẽ pode enviar mensagens !", "utf8"))
-    msg = "%s entrou no chat!" % name
-    broadcast(bytes(msg, "utf8"))
-    clients[client] = name
+    #sending thankYou message to the voter
+    thankYouMessage = "Voto computado. Obrigado, " + name + "!"
+    client.send(bytes(thankYouMessage, "utf8"))
 
+    clients[client] = name
     votes.append(vote)
 
+    #computing votes
     counts = np.bincount(votes)
 
-    vencedor = np.argmax(counts)
-    print(vencedor)
-    print(counts[vencedor])
+    winnerCandidate = np.argmax(counts)
+    winnerCandidateVotes = counts[winnerCandidate]
 
-    while True:
-        msg = client.recv(BUFSIZ)
-        if msg != bytes("{quit}", "utf8"):
-            broadcast(msg, name + "")
-        else:
-            client.send(bytes("{quit}", "utf8"))
-            client.close()
-            del clients[client]
-            broadcast(bytes("%s saiu do chat" % name, "utf8"))
-            break
+    msg = "O candidato da legenda " + str(winnerCandidate) + " vence por " +  str(winnerCandidateVotes) + " voto(s)."
 
+    broadcast(msg)
 
-def broadcast(msg, prefix=""):  # prefix is for name identification.
-    """Broadcasts a message to all the clients."""
+def broadcast(msg):
+    """Broadcasts a message with winner candidate for all clients"""
 
     for sock in clients:
-        sock.send(bytes(prefix, "utf8") + msg)
+        sock.send(bytes(msg, "utf-8"))
 
 
 clients = {}
