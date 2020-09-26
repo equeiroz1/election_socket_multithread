@@ -17,13 +17,19 @@ def accept_incoming_connections():
 def handle_client(client):  # Takes client socket as argument.
     """Handles a single client connection."""
 
-    name = client.recv(BUFSIZ).decode("utf8")
+    msg = client.recv(BUFSIZ).decode("utf8")
+    msg_split = msg.split("@")
+
+    name = msg_split[1]
+    vote = msg_split[2]
+
     welcome = "Bem vindo "
     client.send(bytes(welcome + name + "!", "utf8"))
     client.send(bytes("Agora vocẽ pode enviar mensagens !", "utf8"))
     msg = "%s entrou no chat!" % name
     broadcast(bytes(msg, "utf8"))
     clients[client] = name
+    votes.append(vote)
 
     while True:
         msg = client.recv(BUFSIZ)
@@ -46,6 +52,7 @@ def broadcast(msg, prefix=""):  # prefix is for name identification.
 
 clients = {}
 addresses = {}
+votes = []
 
 HOST = "localhost"
 PORT = 33000

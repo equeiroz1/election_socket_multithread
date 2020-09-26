@@ -29,9 +29,9 @@ def receive():
             break
 
 
-def send_name(event=None):  # event is passed by binders.
+def send_vote(event=None):  # event is passed by binders.
     """Handles sending of messages."""
-    msg = my_name.get()
+    msg = "@" + my_name.get() + "@" + my_vote.get()
     print(msg)
     client_socket.send(bytes(msg, "utf8"))
 
@@ -39,9 +39,9 @@ def send_name(event=None):  # event is passed by binders.
 def send(event=None):  # event is passed by binders.
     """Handles sending of messages."""
     if my_destinatario.get() != "" and my_msg.get() != "":
-        msg = "@" + my_destinatario.get() + "@" + my_assunto.get() + "@" + my_msg.get()
+        msg = "@" + my_destinatario.get() + "@" + my_vote.get() + "@" + my_msg.get()
         my_destinatario.set("")  # Clears input field.
-        my_assunto.set("")
+        my_vote.set("")
         my_msg.set("")  # Clears input field.
         client_socket.send(bytes(msg, "utf8"))
 
@@ -69,7 +69,7 @@ janela.geometry("+0+10")
 messages_frame = tkinter.Frame(janela)
 my_name = tkinter.StringVar()
 my_destinatario = tkinter.StringVar()
-my_assunto = tkinter.StringVar()
+my_vote = tkinter.StringVar()
 my_msg = tkinter.StringVar()  # For the messages to be sent.
 
 scrollbar = tkinter.Scrollbar(messages_frame)
@@ -94,7 +94,7 @@ e_seu_nome = tkinter.Entry(janela, font="Verdana 12 bold", fg="#2F4F4F", textvar
 e_seu_nome.bind("<Return>", )
 e_destinatario = tkinter.Entry(janela, font="Verdana 12 bold", fg="#2F4F4F", textvariable=my_destinatario)
 e_destinatario.bind("<Return>", )
-e_assunto = tkinter.Entry(janela, font="verdana 12 bold", fg="#2F4F4F", textvariable=my_assunto)
+e_assunto = tkinter.Entry(janela, font="verdana 12 bold", fg="#2F4F4F", textvariable=my_vote)
 e_assunto.bind("<Return>", )
 e_mensagem = tkinter.Entry(janela, font="Verdana 12 bold", fg="#2F4F4F", textvariable=my_msg)
 e_mensagem.bind("<Return>", )
@@ -102,7 +102,7 @@ e_mensagem.bind("<Return>", )
 janela.protocol("WM_DELETE_WINDOW", on_closing)
 
 b_enviar_nome = tkinter.Button(janela, text="    Enviar Nome    ", font="Verdana 14 bold", height=1, border=3,
-                               relief="groove", fg="#2F4F4F", command=send_name)
+                               relief="groove", fg="#2F4F4F", command=send_vote)
 b_enviar = tkinter.Button(janela, text="Enviar Mensagem", font="Verdana 14 bold", height=1, border=3,
                           relief="groove", fg="#2F4F4F", command=send)
 b_sair = tkinter.Button(janela, text="Sair", font="Verdana 14 bold", fg="#B22222", border=3, relief='groove',
