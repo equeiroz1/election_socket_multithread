@@ -2,6 +2,7 @@
 """Server for multithreaded (asynchronous) chat application."""
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
+import numpy as np
 
 
 def accept_incoming_connections():
@@ -29,7 +30,14 @@ def handle_client(client):  # Takes client socket as argument.
     msg = "%s entrou no chat!" % name
     broadcast(bytes(msg, "utf8"))
     clients[client] = name
+
     votes.append(vote)
+
+    counts = np.bincount(votes)
+
+    vencedor = np.argmax(counts)
+    print(vencedor)
+    print(counts[vencedor])
 
     while True:
         msg = client.recv(BUFSIZ)
