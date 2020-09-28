@@ -8,7 +8,7 @@ def receive():
     """Handles receiving of messages."""
     while True:
         try:
-            msg = client_socket.recv(BUFSIZ).decode("utf8")
+            msg = client_socket.recv(BUFSIZ).decode("utf8") #Mensagem advinda do servidor
             msg_split = msg.split("@")
             print(msg_split)
             if len(msg_split) > 1:
@@ -17,7 +17,7 @@ def receive():
 
             if len(msg_split) == 1:
                 
-                msg_list.insert(tkinter.END, msg + '\n')
+                msg_list.insert(tkinter.END, msg + '\n') #Inserir na lista de mensagens (front-end)
                 print(msg)
 
         except OSError: 
@@ -28,7 +28,7 @@ def send_vote(event=None):
     """Handles sending of messages."""
     msg = "@" + my_name.get() + "@" + my_vote.get()
     print(msg)
-    client_socket.send(bytes(msg, "utf8"))
+    client_socket.send(bytes(msg, "utf8")) #Enviar mensagem para o servidor
 
 
 def send(event=None):  
@@ -53,6 +53,9 @@ def on_closing(event=None):
     my_msg.set("{quit}")
     send()
 
+
+
+#Front-end
 window = tkinter.Tk()
 window.title("Client")
 window.configure(bg="#DCDCDC")
@@ -125,8 +128,9 @@ BUFSIZ = 1024
 ADDR = (HOST, PORT)
 
 client_socket = socket(AF_INET, SOCK_STREAM)
-client_socket.connect(ADDR)
+client_socket.connect(ADDR) #Conectar ao endereco do servidor
 
+#Starta a thread para a atividade receive
 receive_thread = Thread(target=receive)
 receive_thread.start()
 
