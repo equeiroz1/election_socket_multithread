@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Server for multithreaded (asynchronous) election application."""
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 import numpy as np
 
 
 def accept_incoming_connections():
-    """Sets up handling for incoming clients (voters)."""
+    """Lidar com a conexao de novos clientes (eleitores)"""
     while True:
         client, client_address = SERVER.accept()
         print("%s:%s está online." % client_address)
@@ -15,7 +14,7 @@ def accept_incoming_connections():
         Thread(target=handle_client, args=(client,)).start() #Startar uma nova thread para a atividade de handle_client, passando o cliente como argumento
 
 def handle_client(client): 
-    """Handles client connection"""
+    """lidar com a conexao do cliente"""
 
     msg = client.recv(BUFSIZ).decode("utf8")
     msg_split = msg.split("@")
@@ -41,7 +40,7 @@ def handle_client(client):
     broadcast(msg)
 
 def broadcast(msg):
-    """Broadcasts a message with winner candidate for all clients"""
+    """Transmitir mensagem com o candidato vencedor para todos os clientes"""
 
     for sock in clients:
         sock.send(bytes(msg, "utf-8"))

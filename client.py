@@ -5,7 +5,7 @@ import tkinter
 
 
 def receive():
-    """Handles receiving of messages."""
+    """Lidar com o recebimento de mensagens"""
     while True:
         try:
             msg = client_socket.recv(BUFSIZ).decode("utf8") #Mensagem advinda do servidor
@@ -25,14 +25,14 @@ def receive():
 
 
 def send_vote(event=None):  
-    """Handles sending of messages."""
+    """Lidar com o envio do voto"""
     msg = "@" + my_name.get() + "@" + my_vote.get()
     print(msg)
     client_socket.send(bytes(msg, "utf8")) #Enviar mensagem para o servidor
 
 
-def send(event=None):  
-    """Handles exit."""
+def send_exit(event=None):  
+    """Lidar com a saida."""
     if my_msg.get() != "":
         msg = "@" + my_msg.get()
 
@@ -40,7 +40,7 @@ def send(event=None):
 
 
 def exit(event=None): 
-    """Close connection"""
+    """Fechar conexao"""
     msg = "{quit}"
     client_socket.send(bytes(msg, "utf8"))
     client_socket.close()
@@ -49,9 +49,9 @@ def exit(event=None):
 
 
 def on_closing(event=None):
-    """This function is to be called when the window is closed."""
+    """Lidar quando a janela for fechada"""
     my_msg.set("{quit}")
-    send()
+    send_exit()
 
 
 
