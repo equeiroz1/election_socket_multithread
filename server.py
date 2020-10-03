@@ -5,7 +5,7 @@ import numpy as np
 
 
 def accept_incoming_connections():
-    """Lidar com a conexao de novos clientes (eleitores)"""
+    """Lidar com a conexao de novos clientes"""
     while True:
         client, client_address = SERVER.accept()
         print("%s:%s está online." % client_address)

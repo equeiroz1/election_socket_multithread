@@ -70,7 +70,7 @@ my_msg = tkinter.StringVar()
 scrollbar = tkinter.Scrollbar(messages_frame)
 
 l_seu_nome = tkinter.Label(window, text="   Seu nome:", font="Arial 10 bold", width=11, height=2, bg="#DCDCDC")
-l_assunto = tkinter.Label(window, text="       Voto:", font="Arial 10 bold", width=11, height=2, bg="#DCDCDC")
+l_voto = tkinter.Label(window, text="       Voto:", font="Arial 10 bold", width=11, height=2, bg="#DCDCDC")
 
 l_log = tkinter.Label(window, text="Log Urna", font="Arial 10 bold", height=1, bg="#DCDCDC")
 
@@ -106,7 +106,7 @@ l_divisoriae.grid(row=0, column=0, rowspan=13, sticky="n"+"s")
 l_divisoriaw.grid(row=0, column=3, rowspan=14, sticky="n"+"s")
 
 l_seu_nome.grid(row=1, column=1, sticky="w")
-l_assunto.grid(row=2, column=1, sticky="w")
+l_voto.grid(row=2, column=1, sticky="w")
 l_divisoriac.grid(row=8, column=1)
 l_log.grid(row=9, column=1, columnspan=3)
 
